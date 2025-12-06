@@ -67,7 +67,13 @@ class ProductController extends Controller
     {
         if (!Auth::check() || !(Auth::user()->is_seller ?? false))
             return redirect('/products');
-        $products = Product::where('user_id', Auth::id())->latest()->paginate(12);
+        $products = Product::where('user_id', Auth::id())
+            ->withCount([
+                'orders',
+                'orders as pending_orders_count' => function ($q) {
+                    $q->where('status', 'pending'); }
+            ])
+            ->latest()->paginate(12);
         return view('products.my', compact('products'));
     }
 
@@ -117,8 +123,17 @@ class ProductController extends Controller
     {
         if (!Auth::check() || !(Auth::user()->is_seller ?? false) || $product->user_id !== Auth::id())
             return redirect('/products');
-        if ($product->stock > 0)
-            return back()->with('error', 'Tidak dapat menghapus produk yang masih memiliki stok');
+        $hasAnyOrder = $product->orders()->exists();
+        $hasPendingOrder = $product->orders()->where('status', 'pending')->exists();
+        if (!$hasAnyOrder)
+            return back()->with('error', 'Produk belum pernah dibeli sehingga tidak dapat dihapus');
+        if ($hasPendingOrder)
+            return back()->with('error', 'Produk masih memiliki pesanan pending');
+        if ($product->image_path) {
+            $full = public_path($product->image_path);
+            if (is_file($full))
+                @unlink($full);
+        }
         $product->delete();
         return redirect('/my/shop');
     }

@@ -35,7 +35,8 @@
                 <div class="group rounded-2xl bg-white/70 shadow ring-1 ring-gray-200/40 hover:shadow-lg transition p-4">
                     <a href="/products/{{ $p->id }}/edit" class="block">
                         <div class="relative h-40 flex items-center justify-center">
-                            <span class="absolute top-2 left-2 px-2 py-1 text-xs rounded bg-[#5a3b10] text-white">Kelola</span>
+                            <span
+                                class="absolute top-2 left-2 px-2 py-1 text-xs rounded bg-[#5a3b10] text-white">Kelola</span>
                             @if($p->image_path)
                                 <img src="/{{ $p->image_path }}" class="max-h-40 object-contain rounded-xl"
                                     alt="{{ $p->title }}">
@@ -49,14 +50,15 @@
                     </a>
                     <div class="mt-3 flex items-center gap-2">
                         <a href="/products/{{ $p->id }}/edit" class="px-3 py-1 rounded bg-gray-100">Atur</a>
-                        @if($p->stock == 0)
-                            <form method="post" action="/products/{{ $p->id }}/delete" onsubmit="return confirm('Hapus produk ini?')">
+                        @if(($p->orders_count ?? 0) > 0 && ($p->pending_orders_count ?? 0) === 0)
+                            <form method="post" action="/products/{{ $p->id }}/delete"
+                                onsubmit="return confirm('Hapus produk ini?')">
                                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                 <button class="px-3 py-1 rounded bg-red-100 text-red-600">Hapus</button>
                             </form>
                         @else
                             <button class="px-3 py-1 rounded bg-red-100 text-red-600 opacity-50 cursor-not-allowed" disabled
-                                title="Hanya bisa hapus saat stok 0">Hapus</button>
+                                title="Hapus tersedia setelah ada pesanan dan tidak pending">Hapus</button>
                         @endif
                     </div>
                 </div>

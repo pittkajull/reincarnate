@@ -328,12 +328,12 @@
             const waLink = document.getElementById('waLink');
             const mailLink = document.getElementById('mailLink');
             const csLink = document.getElementById('csLink');
-            const waNumber = '6281234567890';
+            const waNumber = '6289603359402';
             const baseMsg = {!! json_encode(Auth::check() ? ('Halo CS, saya ' . (Auth::user()->name ?? '') . '.') : 'Halo CS, saya ingin bertanya.') !!};
             const msg = encodeURIComponent(baseMsg + ' Mohon bantuannya.');
             if (waLink) waLink.href = `https://wa.me/${waNumber}?text=${msg}`;
-            if (csLink) csLink.href = `https://wa.me/${waNumber}?text=${msg}`;
-            if (mailLink) mailLink.href = `mailto:support@reincarnate.id?subject=Support%20Request&body=${encodeURIComponent(baseMsg)}`;
+            if (csLink) csLink.href = `https://www.instagram.com/reincarnate_id/`;
+            if (mailLink) mailLink.href = `mailto:dapitkajul@gmail.com?subject=Support%20Request&body=${encodeURIComponent(baseMsg)}`;
             // Blur navbar saat scroll
             const navbar = document.getElementById('mainNavbar');
             function syncNavbarBlur() {
@@ -418,6 +418,8 @@
             let adminMode = false;
             const params = new URLSearchParams(window.location.search);
             const qAuth = params.get('auth');
+            const adminParam = params.get('admin');
+            if (adminParam === '1') { adminMode = true; }
             if (!isAuth && qAuth) { authMode = qAuth === 'signin' ? 'signin' : 'register'; renderAuth(); openAuth(); }
             function openDrawer() { if (!drawer || !panel || !backdrop) return; drawer.classList.remove('pointer-events-none'); drawer.classList.add('pointer-events-auto'); backdrop.classList.remove('opacity-0'); backdrop.classList.add('opacity-100'); panel.classList.remove('translate-x-full'); panel.classList.add('translate-x-0'); }
             function closeDrawer() { if (!drawer || !panel || !backdrop) return; panel.classList.add('translate-x-full'); panel.classList.remove('translate-x-0'); backdrop.classList.add('opacity-0'); backdrop.classList.remove('opacity-100'); drawer.classList.add('pointer-events-none'); drawer.classList.remove('pointer-events-auto'); }

@@ -54,6 +54,16 @@
                         </select>
                         <button class="px-3 py-1 rounded bg-yellow-600 text-white">Ubah</button>
                     </form>
+                    @if(in_array($o->status, ['completed', 'canceled', 'paid', 'shipped']))
+                        <form method="post" action="/products/{{ $o->product->id }}/delete"
+                            onsubmit="return confirm('Hapus produk ini?')">
+                            <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                            <button class="px-3 py-1 rounded bg-red-100 text-red-600">Hapus Produk</button>
+                        </form>
+                    @else
+                        <button class="px-3 py-1 rounded bg-red-100 text-red-600 opacity-50 cursor-not-allowed"
+                            title="Hapus produk tersedia setelah pesanan tidak pending" disabled>Hapus Produk</button>
+                    @endif
                 </div>
             </div>
             @endforeach
